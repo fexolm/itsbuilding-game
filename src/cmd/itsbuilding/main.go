@@ -7,14 +7,15 @@ import (
 
 func main() {
 	const (
-		WIDTH  = 800
-		HEIGHT = 600
+		WIDTH  = 1920 / 2
+		HEIGHT = 1080 / 2
 	)
 
 	g := game.NewGame(WIDTH, HEIGHT)
 	g.Start()
 
 	ebiten.SetWindowSize(WIDTH, HEIGHT)
+	ebiten.SetFullscreen(true)
 	ebiten.SetWindowTitle("It's Building!")
 
 	if err := ebiten.RunGame(g); err != nil {
