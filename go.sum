@@ -16,6 +16,14 @@ github.com/quasilyte/gmath v0.0.0-20240609115014-06844cf1c3e2 h1:HltUgMkXt2Q91Bg
 github.com/quasilyte/gmath v0.0.0-20240609115014-06844cf1c3e2/go.mod h1:EbI+KMbALSVE2s0YFOQpR4uj66zBh9ter5P4CBMSuvA=
 github.com/quasilyte/gscene v0.0.0-20240611100302-1351fbba9610 h1:+IjgBa7jf17Spi74iwBcyXcGO6U7eOHR57eYvzbw9z8=
 github.com/quasilyte/gscene v0.0.0-20240611100302-1351fbba9610/go.mod h1:0GWl/j4N+4rfBx2pb+TFn4pnPvGz5rkWY89KrBGt2Go=
+github.com/solarlune/ldtkgo v0.9.3 h1:pPgbO68AlhRzb9hynGoWxuZpYkmxmG0bjuFYpTdH9rQ=
+github.com/solarlune/ldtkgo v0.9.3/go.mod h1:rpW/4FW9wOJR9JVpA67mbCfllBsg6ZvCFZnVtfokdFc=
+github.com/tidwall/gjson v1.6.4 h1:JKsCsJqRVFz8eYCsQ5E/ANRbK6CanAtA9IUvGsXklyo=
+github.com/tidwall/gjson v1.6.4/go.mod h1:BaHyNc5bjzYkPqgLq7mdVzeiRtULKULXLgZFKsxEHI0=
+github.com/tidwall/match v1.0.1 h1:PnKP62LPNxHKTwvHHZZzdOAOCtsJTjo6dZLCwpKm5xc=
+github.com/tidwall/match v1.0.1/go.mod h1:LujAq0jyVjBy028G1WhWfIzbpQfMO8bBZ6Tyb0+pL9E=
+github.com/tidwall/pretty v1.0.2 h1:Z7S3cePv9Jwm1KwS0513MRaoUe3S01WPbLNV40pwWZU=
+github.com/tidwall/pretty v1.0.2/go.mod h1:XNkn88O1ChpSDQmQeStsy+sBenx6DDtFZJxhVysOjyk=
 golang.org/x/exp v0.0.0-20240222234643-814bf88cf225 h1:LfspQV/FYTatPTr/3HzIcmiUFH7PGP+OQ6mgDYo3yuQ=
 golang.org/x/exp v0.0.0-20240222234643-814bf88cf225/go.mod h1:CxmFvTBINI24O/j8iY7H1xHzx2i4OsyguNBmN/uPtqc=
 golang.org/x/image v0.16.0 h1:9kloLAKhUufZhA12l5fwnx2NZW39/we1UhBesW433jw=

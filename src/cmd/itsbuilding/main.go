@@ -32,8 +32,8 @@ func (g *Game) Layout(w, h int) (int, int) {
 
 func main() {
 	const (
-		WIDTH  = 1920 / 2
-		HEIGHT = 1080 / 2
+		WIDTH  = 960
+		HEIGHT = 540
 	)
 
 	g := &Game{

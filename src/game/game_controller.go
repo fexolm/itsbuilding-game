@@ -20,6 +20,7 @@ func NewGameController() *GameController {
 func (c *GameController) Init(ctx gscene.InitContext) {
 	c.scene = ctx.Scene
 
+	c.scene.AddObject(LoadMap("maps/office.ldtk"))
 	c.scene.AddObject(NewStaticObject(gmath.Vec{X: 60., Y: 60.}, assets.OpenSprite("table.png")))
 	c.scene.AddObject(NewLaptop(gmath.Vec{X: 60., Y: 50.}))
 	c.scene.AddObject(NewPlayer())
