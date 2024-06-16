@@ -11,9 +11,9 @@ type Player struct {
 	u *Unit
 }
 
-func NewPlayer() *Player {
+func NewPlayer(m *Map) *Player {
 	p := &Player{
-		NewUnit(assets.OpenSprite("characters/worker_player.png")),
+		u: NewUnit(m, assets.OpenSprite("characters/worker_player.png")),
 	}
 	return p
 }
@@ -23,7 +23,7 @@ func (p *Player) Update(delta float64) {
 
 	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
 		x, y := ebiten.CursorPosition()
-		p.u.waypoint = gmath.Vec{X: float64(x), Y: float64(y)}
+		p.u.SetWaypoint(gmath.Vec{X: float64(x), Y: float64(y)})
 	}
 }
 

@@ -7,6 +7,7 @@ require (
 	github.com/quasilyte/ebitengine-graphics v0.0.0-20240612144128-74c2570aa3b1
 	github.com/quasilyte/gmath v0.0.0-20240609115014-06844cf1c3e2
 	github.com/quasilyte/gscene v0.0.0-20240611100302-1351fbba9610
+	github.com/quasilyte/pathing v0.0.0-20231012081721-0370212e864a
 	github.com/solarlune/ldtkgo v0.9.3
 )
 

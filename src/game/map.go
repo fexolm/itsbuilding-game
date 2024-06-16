@@ -5,7 +5,9 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	graphics "github.com/quasilyte/ebitengine-graphics"
+	"github.com/quasilyte/gmath"
 	"github.com/quasilyte/gscene"
+	"github.com/quasilyte/pathing"
 	"github.com/solarlune/ldtkgo"
 	"image"
 	"io"
@@ -13,6 +15,7 @@ import (
 
 type Map struct {
 	sprite *graphics.Sprite
+	grid   *pathing.Grid
 }
 
 func (m *Map) Init(s *gscene.Scene) {
@@ -26,17 +29,58 @@ func (m *Map) IsDisposed() bool {
 	return false
 }
 
+func (m *Map) FindPath(from gmath.Vec, to gmath.Vec) []gmath.Vec {
+	bfs := pathing.NewGreedyBFS(pathing.GreedyBFSConfig{})
+
+	start := pathing.GridCoord{X: int(from.X / 32), Y: int(from.Y / 32)}
+	finish := pathing.GridCoord{X: int(to.X / 32), Y: int(to.Y / 32)}
+
+	steps := bfs.BuildPath(m.grid, start, finish, normalLayer).Steps
+
+	path := make([]gmath.Vec, steps.Len())
+	idx := 0
+
+	for steps.HasNext() {
+		switch steps.Next() {
+		case pathing.DirRight:
+			from.X += 32
+		case pathing.DirLeft:
+			from.X -= 32
+		case pathing.DirDown:
+			from.Y += 32
+		case pathing.DirUp:
+			from.Y -= 32
+		default:
+		}
+		path[idx] = from
+		idx += 1
+	}
+
+	return path
+}
+
 type ltdkMapGenerator struct {
 	proj           *ldtkgo.Project
 	tilesets       map[string]*ebiten.Image
 	currentTileset *ebiten.Image
 	renderTarget   *ebiten.Image
+	grid           *pathing.Grid
 }
 
 func newLtdkMapGenerator(proj *ldtkgo.Project) *ltdkMapGenerator {
 	tilesets := make(map[string]*ebiten.Image)
 	return &ltdkMapGenerator{proj: proj, tilesets: tilesets}
 }
+
+const (
+	tileFloor = iota
+	tileWall
+)
+
+var normalLayer = pathing.MakeGridLayer([4]uint8{
+	tileFloor: 1,
+	tileWall, 0,
+})
 
 func (g *ltdkMapGenerator) createMap() *Map {
 	for _, tileset := range g.proj.Tilesets {
@@ -54,6 +98,13 @@ func (g *ltdkMapGenerator) createMap() *Map {
 	level := g.proj.Levels[0]
 
 	g.renderTarget = ebiten.NewImage(960, 540)
+	g.grid = pathing.NewGrid(pathing.GridConfig{
+		WorldWidth:  960,
+		WorldHeight: 540,
+		CellWidth:   32,
+		CellHeight:  32,
+	})
+
 	for layerIndex := len(level.Layers) - 1; layerIndex >= 0; layerIndex-- {
 		layer := level.Layers[layerIndex]
 
@@ -62,6 +113,12 @@ func (g *ltdkMapGenerator) createMap() *Map {
 			tileIndex := 0
 
 			for _, tileData := range layer.AutoTiles {
+				if layer.Identifier == "Collisions" {
+					g.grid.SetCellTile(pathing.GridCoord{X: tileData.Position[0] / 32, Y: tileData.Position[1] / 32}, tileWall)
+				} else {
+					g.grid.SetCellTile(pathing.GridCoord{X: tileData.Position[0] / 32, Y: tileData.Position[1] / 32}, tileFloor)
+				}
+
 				g.drawTile(tileData, tileIndex, layer)
 				tileIndex++
 			}
@@ -71,7 +128,7 @@ func (g *ltdkMapGenerator) createMap() *Map {
 	s.SetImage(g.renderTarget)
 	s.SetCentered(false)
 
-	return &Map{sprite: s}
+	return &Map{sprite: s, grid: g.grid}
 }
 
 func (g *ltdkMapGenerator) drawTile(tileData *ldtkgo.Tile, tileIndex int, layer *ldtkgo.Layer) {

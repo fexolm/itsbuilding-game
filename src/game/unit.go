@@ -7,16 +7,17 @@ import (
 )
 
 type Unit struct {
-	pos      gmath.Vec
-	waypoint gmath.Vec
+	pos  gmath.Vec
+	path []gmath.Vec
 
 	sprite    *graphics.Sprite
 	animation *Animation
+	m         *Map
 }
 
 const UnitSpeed = 50
 
-func NewUnit(sprite *graphics.Sprite) *Unit {
+func NewUnit(m *Map, sprite *graphics.Sprite) *Unit {
 	u := &Unit{
 		pos: gmath.Vec{},
 	}
@@ -32,7 +33,13 @@ func NewUnit(sprite *graphics.Sprite) *Unit {
 	u.animation.repeated = true
 	u.animation.numAnimations = 4
 
+	u.m = m
+
 	return u
+}
+
+func (u *Unit) SetWaypoint(pos gmath.Vec) {
+	u.path = u.m.FindPath(u.pos, pos)
 }
 
 func (u *Unit) Init(s *gscene.Scene) {
@@ -40,19 +47,33 @@ func (u *Unit) Init(s *gscene.Scene) {
 }
 
 func (u *Unit) Update(delta float64) {
-	if !u.pos.EqualApprox(u.waypoint) {
-		u.animation.Tick(delta)
+	if len(u.path) != 0 {
+		u.move(delta)
+	}
+}
+
+func (u *Unit) move(delta float64) {
+	if u.path[0].EqualApprox(u.pos) {
+		u.path = u.path[1:]
 	}
 
-	u.pos = u.pos.MoveTowards(u.waypoint, UnitSpeed*delta)
+	if len(u.path) == 0 {
+		return
+	}
 
-	if u.pos.X < u.waypoint.X {
+	u.animation.Tick(delta)
+
+	wp := u.path[0]
+
+	u.pos = u.pos.MoveTowards(wp, UnitSpeed*delta)
+
+	if u.pos.X < wp.X {
 		u.animation.SetOffsetY(1)
-	} else if u.pos.X > u.waypoint.X {
+	} else if u.pos.X > wp.X {
 		u.animation.SetOffsetY(2)
-	} else if u.pos.Y < u.waypoint.Y {
+	} else if u.pos.Y < wp.Y {
 		u.animation.SetOffsetY(0)
-	} else if u.pos.Y > u.waypoint.Y {
+	} else if u.pos.Y > wp.Y {
 		u.animation.SetOffsetY(3)
 	}
 }
